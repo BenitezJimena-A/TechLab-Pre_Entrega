@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -5,7 +6,7 @@ public class Main {
 
   public static void main(String[] args) {
     Scanner entrada = new Scanner(System.in);
-    ArrayList<String> productosBDD;
+    ArrayList<String> productosBDD = null;
 
     int opcion;
     boolean continuar = true;
@@ -16,22 +17,22 @@ public class Main {
 
       switch (opcion) {
         case 1:
-          productosBDD.agregarProductos();
+          agregarProductos(productosBDD);
           break;
         case 2:
-          productosBDD.listarProductos();
+          //listarProductos(productosBDD);
           break;
         case 3:
-          productosBDD.buscarActProductos();
+          //buscarActProductos(productosBDD);
           break;
         case 4:
-          productosBDD.eliminarProductos();
+          //eliminarProductos(productosBDD);
           break;
         case 5:
-          productosBDD.crearPedidos();
+          //crearPedidos(productosBDD);
           break;
         case 6:
-          productosBDD.listarPedidos();
+          //listarPedidos(productosBDD);
           break;
         case 7:
           System.out.println("¡Hasta luego!.");
@@ -63,7 +64,7 @@ public class Main {
     return opcion;
   }
 
-  public static void agregarProductos() {
+  public static void agregarProductos(ArrayList<> productos) {
     Scanner entrada = new Scanner(System.in);
     boolean continuar = true;
     String nombre;
