@@ -1,5 +1,6 @@
 package Proyecto;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Producto{
@@ -50,5 +51,10 @@ public class Producto{
     return this.id == id;
   }
 
+  public static void mostrarListaPedidos(ArrayList<Producto> productos){
+    for (Producto p : productos) {
+      System.out.printf(p.infoProducto());
+    }
+  }
 
 }

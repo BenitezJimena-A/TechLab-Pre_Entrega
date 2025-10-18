@@ -52,7 +52,7 @@ public class Main {
   public static int mostrarMenu(Scanner entrada) {
     System.out.println("""
         Menú:
-        1) Agregar producto     //DEBE ESTAR
+        1) Agregar producto     //LISTO
         2) Listar productos     //LISTO
         3) Buscar/Actualizar producto     //DEBE ESTAR
         4) Eliminar producto      //DEBE ESTAR
@@ -74,7 +74,8 @@ public class Main {
     while (continuar) {
       System.out.println("-----Agregar nuevos productos-----");
       System.out.println("Ingrese el nombre del producto: ");
-      nombre = formatearTexto(entrada.nextLine());              //NO PERMITIR QUE NO INGRESE NOMBRE
+      nombre = formatearTexto(entrada,
+          entrada.nextLine());              //NO PERMITIR QUE NO INGRESE NOMBRE
       System.out.println("Ingrese el precio del producto: ");
       precio = mayorACero(entrada, entrada.nextDouble());
       System.out.println("Ingrese la cantidad de stock del producto: ");
@@ -88,18 +89,17 @@ public class Main {
   }
 
   public static void listarProductos(Scanner entrada, ArrayList<Producto> productosBDD) {
-    boolean continuar = true;
-
-    entrada.nextLine(); //Limpia el enter que quedo en el buffer
-    if(!(productosBDD.isEmpty())){
-      System.out.println("-----Lista de productos-----\n [ID]  Nombre  $precio Stock");
-      while (continuar) {
-        for (Producto p : productosBDD) {
-          System.out.printf(p.infoProducto());
-        }
-        continuar = deseaContinuar(entrada);
-      }
+    if (productosBDD.isEmpty()) {
+      System.out.println("No hay productos para mostrar.");
+      return;
     }
+
+    System.out.println("-----Lista de productos-----\n[ID]  Nombre  $precio Stock");
+    Producto.mostrarListaPedidos(productosBDD);
+
+    System.out.println("\nPresiona ENTER para volver al menú...");
+    entrada.nextLine();
+    return;
   }
 
   public static boolean deseaContinuar(Scanner entrada) {
@@ -112,16 +112,19 @@ public class Main {
     return respuesta.equals("s");
   }
 
-  public static String formatearTexto(String texto) {
-    String textoFormateado = "";
-
-    if (!texto.isEmpty()) {
-      texto = texto.toLowerCase().trim();//Todas las letras en minuscula + eliminar espacios extra
-      textoFormateado = texto.substring(0, 1).toUpperCase() + texto.substring(
-          1); //Primera letra mayuscula, el resto se mantiene en minus
+  public static String formatearTexto(Scanner entrada, String texto) {
+    if (texto.isEmpty()) {
+      while (texto.trim().isEmpty()) {
+        System.out.println("El texto no puede estar vacío. Inténtalo nuevamente:");
+        texto = entrada.nextLine();
+      }
     }
+
+    texto = texto.toLowerCase().trim();
+    String textoFormateado = texto.substring(0, 1).toUpperCase() + texto.substring(1);
     return textoFormateado;
   }
+
   private static Double mayorACero(Scanner entrada, double num) {
     while (num < 1) {
       System.out.println("Valor invalido. Intente nuevamente: ");
