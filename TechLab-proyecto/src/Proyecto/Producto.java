@@ -47,11 +47,29 @@ public class Producto{
     this.cantStock = cantStock;
   }
 
-  public boolean coincideID(int id){
-    return this.id == id;
+  public static boolean coincideID(ArrayList<Producto> productos, int id) {
+    for (Producto p : productos) {
+      if (p.id == id) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  public static void mostrarListaPedidos(ArrayList<Producto> productos){
+  public static Producto buscarProductoPorID(ArrayList<Producto> productos, int id) {
+    for (Producto p : productos) {
+      if (p.id == id) {
+        return p;
+      }
+    }
+    return null; // no encontrado
+  }
+
+  public static void eliminarProducto(ArrayList<Producto> productos, Producto p) {
+    productos.remove(p);
+  }
+
+  public static void mostrarListaProductos(ArrayList<Producto> productos) {
     for (Producto p : productos) {
       System.out.printf(p.infoProducto());
     }

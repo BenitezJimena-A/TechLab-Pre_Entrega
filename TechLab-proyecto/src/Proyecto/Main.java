@@ -28,7 +28,7 @@ public class Main {
           //buscarActProductos(productosBDD);
           break;
         case 4:
-          //eliminarProductos(productosBDD);
+          eliminarProductos(entrada, productosBDD);
           break;
         case 5:
           //crearPedidos(productosBDD);
@@ -48,16 +48,15 @@ public class Main {
 
   }
 
-
   public static int mostrarMenu(Scanner entrada) {
-    System.out.println("""
+    System.out.print("""
         Menú:
         1) Agregar producto     //LISTO
         2) Listar productos     //LISTO
-        3) Buscar/Actualizar producto     //DEBE ESTAR
-        4) Eliminar producto      //DEBE ESTAR
-        5) Crear un pedido
-        6) Listar pedidos
+        3) Buscar/Actualizar producto     //EN PROCESO
+        4) Eliminar producto por ID      //LISTO
+        5) Crear un pedido      //EN PROCESO
+        6) Listar pedidos     //EN PROCESO
         7) Salir      //LISTO
         
         Elija una opción:
@@ -74,8 +73,7 @@ public class Main {
     while (continuar) {
       System.out.println("-----Agregar nuevos productos-----");
       System.out.println("Ingrese el nombre del producto: ");
-      nombre = formatearTexto(entrada,
-          entrada.nextLine());              //NO PERMITIR QUE NO INGRESE NOMBRE
+      nombre = formatearTexto(entrada, entrada.nextLine());
       System.out.println("Ingrese el precio del producto: ");
       precio = mayorACero(entrada, entrada.nextDouble());
       System.out.println("Ingrese la cantidad de stock del producto: ");
@@ -94,14 +92,56 @@ public class Main {
       return;
     }
 
-    System.out.println("-----Lista de productos-----\n[ID]  Nombre  $precio Stock");
-    Producto.mostrarListaPedidos(productosBDD);
+    System.out.print("""
+        -----Lista de productos-----
+        [ID]  Nombre  $precio Stock
+        """);
+    Producto.mostrarListaProductos(productosBDD);
 
     System.out.println("\nPresiona ENTER para volver al menú...");
     entrada.nextLine();
     return;
   }
 
+  public static void eliminarProductos(Scanner entrada, ArrayList<Producto> productosBDD) {
+    boolean continuar = true;
+    while (continuar) {
+      if (productosBDD.isEmpty()) {
+        System.out.println("No hay productos para mostrar.");
+        return;
+      }
+
+      System.out.println("-----Eliminar productos-----");
+      Producto productoSeleccionado = solicitarProductoPorID(entrada, productosBDD);
+      if (productoSeleccionado == null) {
+        return;  //Si no existe el producto se vuelve al menú.
+      }
+
+      System.out.print("El producto seleccionado es: " + productoSeleccionado.infoProducto());
+      boolean respuesta = deseaContinuar(entrada);
+      if (respuesta) {
+        Producto.eliminarProducto(productosBDD, productoSeleccionado);
+        System.out.println("El producto fue eliminado exitosamente!.");
+      } else {
+        System.out.println("La eliminación del producto fue cancelada.");
+      }
+
+      continuar = deseaContinuar(entrada);
+    }
+  }
+
+  public static Producto solicitarProductoPorID(Scanner entrada, ArrayList<Producto> productosBDD) {
+    System.out.println("Ingrese el ID del producto que desea eliminar: ");
+    int idProductoSeleccionado = entrada.nextInt();
+    entrada.nextLine(); // limpiar buffer
+
+    if (!Producto.coincideID(productosBDD, idProductoSeleccionado)) {
+      System.out.println(
+          "El id del producto no existe. Se sugiere buscar el producto en la lista de productos[opción 2] o por nombre[opción 3].");
+      return null;
+    }
+    return Producto.buscarProductoPorID(productosBDD, idProductoSeleccionado);
+  }
   public static boolean deseaContinuar(Scanner entrada) {
     System.out.println("Desea continuar?s/n: ");
     String respuesta = entrada.nextLine().toLowerCase();
