@@ -47,14 +47,6 @@ public class Producto{
     this.cantStock = cantStock;
   }
 
-  public static boolean coincideID(ArrayList<Producto> productos, int id) {
-    for (Producto p : productos) {
-      if (p.id == id) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   public static Producto buscarProductoPorID(ArrayList<Producto> productos, int id) {
     for (Producto p : productos) {
@@ -63,6 +55,33 @@ public class Producto{
       }
     }
     return null; // no encontrado
+  }
+
+  public static ArrayList buscarProductoPorNombre(ArrayList<Producto> productos, String nombre) {
+    ArrayList<Producto> productosEncontrados = new ArrayList<>();
+    for (Producto p : productos) {
+      if (p.getNombre().contains(nombre)) {
+        productosEncontrados.add(p);
+      }
+    }
+    return productosEncontrados;
+  }
+
+  public static void mostrarMensajeProductoNoEncontrado(int opcion) {
+    int busquedaPorID = 0;
+    int busquedaPorNombre = 1;
+
+    String texto = "No se encontraron productos con ese %s. Puede ver los productos existentes en la lista de productos[opción 2] o buscar por %s[opción 2].";
+    String mensaje;
+    if (opcion == busquedaPorID) { //Busqueda por ID
+      mensaje = texto.formatted("ID", "Nombre");
+    } else if (opcion == busquedaPorNombre) { // Búsqueda por Nombre
+      mensaje = texto.formatted("Nombre", "ID");
+    } else {
+      mensaje = "Opción no válida.";
+    }
+
+    System.out.println(mensaje);
   }
 
   public static void eliminarProducto(ArrayList<Producto> productos, Producto p) {
