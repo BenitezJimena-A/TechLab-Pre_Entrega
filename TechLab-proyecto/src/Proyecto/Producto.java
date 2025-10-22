@@ -71,7 +71,7 @@ public class Producto{
     int busquedaPorID = 0;
     int busquedaPorNombre = 1;
 
-    String texto = "No se encontraron productos con ese %s. Puede ver los productos existentes en la lista de productos[opción 2] o buscar por %s[opción 2].";
+    String texto = "No se encontraron productos con ese %s. Puede ver los productos existentes en la lista de productos[opción 2] o buscar por %s[opción 3].";
     String mensaje;
     if (opcion == busquedaPorID) { //Busqueda por ID
       mensaje = texto.formatted("ID", "Nombre");
@@ -88,9 +88,15 @@ public class Producto{
     productos.remove(p);
   }
 
-  public static void mostrarListaProductos(ArrayList<Producto> productos) {
+  public static void mostrarListaProductosDetallada(ArrayList<Producto> productos) {
     for (Producto p : productos) {
       System.out.printf(p.infoProducto());
+    }
+  }
+
+  public static void mostrarListaProductos(ArrayList<Producto> productos) {
+    for (Producto p : productos) {
+      System.out.printf(p.getNombre() + " $" + p.getPrecio());
     }
   }
 

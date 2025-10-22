@@ -8,6 +8,7 @@ public class Main {
   public static void main(String[] args) {
     Scanner entrada = new Scanner(System.in);
     ArrayList<Producto> productosBDD = new ArrayList<>();
+    ArrayList<Pedido> pedidosBDD = new ArrayList<>();
 
     int opcion;
     boolean continuar = true;
@@ -31,10 +32,10 @@ public class Main {
           eliminarProductos(entrada, productosBDD);
           break;
         case 5:
-          //crearPedidos(productosBDD);
+          crearPedidos(entrada, productosBDD, pedidosBDD);
           break;
         case 6:
-          //listarPedidos(productosBDD);
+          //listarPedidos(entrada, pedidosBDD);
           break;
         case 7:
           System.out.println("¡Hasta luego!.");
@@ -90,6 +91,15 @@ public class Main {
     return entrada.nextInt();
   }
 
+  public static void menuCrearPedido(ArrayList<Producto> productosBDD) {
+    System.out.println("""
+        -----Crear pedido-----
+        Listado de productos:
+        """);
+    Producto.mostrarListaProductos(productosBDD);
+    System.out.println("Seleccione un producto para agregar al carrito.");
+  }
+
   public static void agregarProductos(Scanner entrada, ArrayList<Producto> productos) {
     boolean continuar = true;
     String nombre;
@@ -122,7 +132,7 @@ public class Main {
         -----Lista de productos-----
         [ID]  Nombre  $precio Stock
         """);
-    Producto.mostrarListaProductos(productosBDD);
+    Producto.mostrarListaProductosDetallada(productosBDD);
 
     System.out.println("\nPresiona ENTER para volver al menú...");
     entrada.nextLine();
@@ -196,7 +206,7 @@ public class Main {
 
   public static void actualizarProducto(Scanner entrada, ArrayList<Producto> listaProductos) {
     System.out.println("Se encontraron los siguientes productos:");
-    Producto.mostrarListaProductos(listaProductos);
+    Producto.mostrarListaProductosDetallada(listaProductos);
     Producto productoSeleccionado = solicitarProductoPorID(entrada, listaProductos);
     if (productoSeleccionado == null) {
       Producto.mostrarMensajeProductoNoEncontrado(0);
@@ -252,6 +262,56 @@ public class Main {
 
       continuar = deseaContinuar(entrada, "Desea eliminar otro producto?");
     }
+  }
+
+  public static void crearPedidos(Scanner entrada, ArrayList<Producto> productosBDD,
+      ArrayList<Pedido> pedidosBDD) {
+    Pedido pedidoActual = new Pedido();
+    boolean continuar = true;
+    Producto productoSeleccionado;
+    int cantidadProducto;
+    boolean respuesta;
+    String confirmacion = "Ha seleccionado %d unidad/es del producto %s. Confirma que desea agregarlo al carrito? s/n:";
+
+    while (continuar) {
+      menuCrearPedido(productosBDD);
+      productoSeleccionado = solicitarProductoPorID(entrada, productosBDD);
+      cantidadProducto = solicitarCantidadProducto(entrada, productoSeleccionado);
+
+      respuesta = deseaContinuar(entrada,
+          confirmacion.formatted(cantidadProducto, productoSeleccionado));
+      if (respuesta) {
+        ProductoCarrito item = new ProductoCarrito(productoSeleccionado, cantidadProducto);
+        pedidoActual.agregarProductoCarrito(item);
+        System.out.println("El producto se agrego al carrito.");
+      } else {
+        System.out.println("No se agregó el producto al carrito.");
+      }
+      continuar = deseaContinuar(entrada, "Desea agregar otro producto al mismo pedido? s/n: ");
+    }
+    pedidosBDD.add(pedidoActual);
+    System.out.println("El pedido fue realizado con éxito.");
+  }
+
+  /*
+    public static void listarPedidos(Scanner entrada, ArrayList<Pedido> pedidosBDD){
+      System.out.println("-----Lista de Pedidos-----");
+      pedidosBDD.
+    }
+  */
+  public static int solicitarCantidadProducto(Scanner entrada, Producto producto) {
+    int cantidad;
+    System.out.println("Ingrese la cantidad que desea comprar: ");
+    cantidad = entrada.nextInt();
+    entrada.nextLine();
+
+    while (cantidad < 0 || cantidad > producto.getCantStock()) {
+      System.out.println("La cantidad solicitada supera el stock disponible. Intente nuevamente: ");
+      cantidad = entrada.nextInt();
+      entrada.nextLine();
+    }
+    producto.setCantStock(producto.getCantStock() - cantidad);
+    return cantidad;
   }
 
   public static Producto solicitarProductoPorID(Scanner entrada, ArrayList<Producto> productosBDD) {
