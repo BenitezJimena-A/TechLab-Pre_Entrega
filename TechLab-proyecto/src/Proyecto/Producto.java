@@ -96,7 +96,7 @@ public class Producto{
 
   public static void mostrarListaProductos(ArrayList<Producto> productos) {
     for (Producto p : productos) {
-      System.out.printf(p.getNombre() + " $" + p.getPrecio());
+      System.out.println("[" + p.id + "] " + p.getNombre() + " $" + p.getPrecio());
     }
   }
 

@@ -32,10 +32,10 @@ public class Main {
           eliminarProductos(entrada, productosBDD);
           break;
         case 5:
-          crearPedidos(entrada, productosBDD, pedidosBDD);
+          crearPedido(entrada, productosBDD, pedidosBDD);
           break;
         case 6:
-          //listarPedidos(entrada, pedidosBDD);
+          listarPedidos(entrada, pedidosBDD);
           break;
         case 7:
           System.out.println("¡Hasta luego!.");
@@ -52,13 +52,13 @@ public class Main {
   public static int menuPrincipal(Scanner entrada) {
     System.out.print("""
         Menú:
-        1) Agregar producto     //LISTO
-        2) Listar productos     //LISTO
-        3) Buscar/Actualizar producto     //LISTO
-        4) Eliminar producto por ID      //LISTO
-        5) Crear un pedido      //EN PROCESO
-        6) Listar pedidos     //EN PROCESO
-        7) Salir      //LISTO
+        1) Agregar producto
+        2) Listar productos
+        3) Buscar/Actualizar producto
+        4) Eliminar producto por ID
+        5) Crear un pedido
+        6) Listar pedidos
+        7) Salir
         
         Elija una opción:
         """);
@@ -94,8 +94,7 @@ public class Main {
   public static void menuCrearPedido(ArrayList<Producto> productosBDD) {
     System.out.println("""
         -----Crear pedido-----
-        Listado de productos:
-        """);
+        Listado de productos:""");
     Producto.mostrarListaProductos(productosBDD);
     System.out.println("Seleccione un producto para agregar al carrito.");
   }
@@ -127,7 +126,6 @@ public class Main {
       System.out.println("No hay productos para mostrar.");
       return;
     }
-
     System.out.print("""
         -----Lista de productos-----
         [ID]  Nombre  $precio Stock
@@ -264,14 +262,15 @@ public class Main {
     }
   }
 
-  public static void crearPedidos(Scanner entrada, ArrayList<Producto> productosBDD,
+  public static void crearPedido(Scanner entrada, ArrayList<Producto> productosBDD,
       ArrayList<Pedido> pedidosBDD) {
     Pedido pedidoActual = new Pedido();
     boolean continuar = true;
+    String nombreCliente;
     Producto productoSeleccionado;
     int cantidadProducto;
     boolean respuesta;
-    String confirmacion = "Ha seleccionado %d unidad/es del producto %s. Confirma que desea agregarlo al carrito? s/n:";
+    String confirmacion = "Ha seleccionado %d unidad/es del producto \"%s\" con un valor de $%s cada una. ¿Está seguro de que quiere agregarlo al carrito?";
 
     while (continuar) {
       menuCrearPedido(productosBDD);
@@ -279,7 +278,8 @@ public class Main {
       cantidadProducto = solicitarCantidadProducto(entrada, productoSeleccionado);
 
       respuesta = deseaContinuar(entrada,
-          confirmacion.formatted(cantidadProducto, productoSeleccionado));
+          confirmacion.formatted(cantidadProducto, productoSeleccionado.getNombre(),
+              productoSeleccionado.getPrecio()));
       if (respuesta) {
         ProductoCarrito item = new ProductoCarrito(productoSeleccionado, cantidadProducto);
         pedidoActual.agregarProductoCarrito(item);
@@ -287,18 +287,36 @@ public class Main {
       } else {
         System.out.println("No se agregó el producto al carrito.");
       }
-      continuar = deseaContinuar(entrada, "Desea agregar otro producto al mismo pedido? s/n: ");
+      continuar = deseaContinuar(entrada, "Desea agregar otro producto al mismo pedido?");
     }
+    System.out.println("Para finalizar ingrese su nombre:");
+    nombreCliente = formatearTexto(entrada, entrada.nextLine());
+    pedidoActual.setNombreCliente(nombreCliente);
     pedidosBDD.add(pedidoActual);
-    System.out.println("El pedido fue realizado con éxito.");
+    System.out.println(
+        "El pedido fue realizado con éxito. Su costo total es de: " + pedidoActual.getCostoTotal());
   }
 
-  /*
     public static void listarPedidos(Scanner entrada, ArrayList<Pedido> pedidosBDD){
-      System.out.println("-----Lista de Pedidos-----");
-      pedidosBDD.
+      Pedido pedidoSeleccionado;
+      if (pedidosBDD.isEmpty()) {
+        System.out.println("No existen pedidos creados hasta el momento.");
+        return;
+      }
+      System.out.println("""
+          -----Lista de Pedidos-----
+          [ID] Pedido de NOMBRE. Costo total: $$$""");
+      Pedido.mostrarTodosLosPedidos(pedidosBDD);
+      pedidoSeleccionado = solicitarPedidoPorID(entrada, pedidosBDD);
+      while (pedidoSeleccionado == null) {
+        System.out.println(
+            "No existe pedido con el ID indicado. Por favor, vuelva a visualizar la lista de pedidos e intente nuevamente:  ");
+        pedidoSeleccionado = solicitarPedidoPorID(entrada, pedidosBDD);
+      }
+      pedidoSeleccionado.infoPedido();
+      System.out.println("\nPresiona ENTER para volver al menú...");
+      entrada.nextLine();
     }
-  */
   public static int solicitarCantidadProducto(Scanner entrada, Producto producto) {
     int cantidad;
     System.out.println("Ingrese la cantidad que desea comprar: ");
@@ -322,6 +340,14 @@ public class Main {
         idProductoSeleccionado);
 
     return productoEncontrado;
+  }
+
+  public static Pedido solicitarPedidoPorID(Scanner entrada, ArrayList<Pedido> pedidosBDD) {
+    System.out.println("Ingrese el ID del pedido: ");
+    int idPedidoSeleccionado = entrada.nextInt();
+    entrada.nextLine(); // limpiar buffer
+    Pedido pedidoEncontrado = Pedido.buscarPedidoPorID(pedidosBDD, idPedidoSeleccionado);
+    return pedidoEncontrado;
   }
 
   public static ArrayList<Producto> solicitarProductoPorNombre(Scanner entrada,
