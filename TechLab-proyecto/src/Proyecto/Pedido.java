@@ -11,14 +11,6 @@ public class Pedido {
   private String nombreCliente = "";
   private Double costoTotal = 0.0;
 
-  public Pedido(ArrayList<ProductoCarrito> listaProductos, String nombreCliente) {
-    this.id = siguienteId;
-    this.listaProductos = listaProductos;
-    this.nombreCliente = nombreCliente;
-    calcularCostoTotal();
-    siguienteId++;
-  }
-
   public Pedido() {
     this.id = siguienteId;
     listaProductos = new ArrayList<>();

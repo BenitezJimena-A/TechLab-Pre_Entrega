@@ -19,31 +19,17 @@ public class Main {
       entrada.nextLine(); //Limpia el enter que quedo en el buffer
 
       switch (opcion) {
-        case 1:
-          agregarProductos(entrada, productosBDD);
-          break;
-        case 2:
-          listarProductos(entrada, productosBDD);
-          break;
-        case 3:
-          buscarProductos(entrada, productosBDD);
-          break;
-        case 4:
-          eliminarProductos(entrada, productosBDD);
-          break;
-        case 5:
-          crearPedido(entrada, productosBDD, pedidosBDD);
-          break;
-        case 6:
-          listarPedidos(entrada, pedidosBDD);
-          break;
-        case 7:
+        case 1 -> agregarProductos(entrada, productosBDD);
+        case 2 -> listarProductos(entrada, productosBDD);
+        case 3 -> buscarProductos(entrada, productosBDD);
+        case 4 -> eliminarProductos(entrada, productosBDD);
+        case 5 -> crearPedido(entrada, productosBDD, pedidosBDD);
+        case 6 -> listarPedidos(entrada, pedidosBDD);
+        case 7 -> {
           System.out.println("¡Hasta luego!.");
           continuar = false;
-          break;
-        default:
-          System.out.println("Opción incorrecta. Intente nuevamente.");
-          break;
+        }
+        default -> System.out.println("Opción incorrecta. Intente nuevamente.");
       }
     }
 
@@ -181,21 +167,15 @@ public class Main {
       entrada.nextLine(); //Limpia el enter que quedo en el buffer
 
       switch (opcionActualizar) {
-        case 1:
-          actualizarNombre(entrada, producto);
-          break;
-        case 2:
-          actualizarPrecio(entrada, producto);
-          break;
-        case 3:
-          actualizarStock(entrada, producto);
-          break;
-        case 4:
-          entrada.nextLine(); //Limpia el enter que quedo en el buffer
+        case 1 -> actualizarNombre(entrada, producto);
+        case 2 -> actualizarPrecio(entrada, producto);
+        case 3 -> actualizarStock(entrada, producto);
+        case 4 -> {
+          entrada.nextLine();
+          //Limpia el enter que quedo en el buffer
           return;
-        default:
-          System.out.print("Opción incorrecta. Intente nuevamente.");
-          break;
+        }
+        default -> System.out.print("Opción incorrecta. Intente nuevamente.");
       }
       entrada.nextLine(); //Limpia el enter que quedo en el buffer
       continuar = deseaContinuar(entrada, "Desea seguir actualizando los datos del producto?");
