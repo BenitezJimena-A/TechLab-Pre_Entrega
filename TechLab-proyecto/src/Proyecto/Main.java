@@ -94,16 +94,16 @@ public class Main {
     while (continuar) {
       System.out.println("-----Agregar nuevos productos-----");
       System.out.println("Ingrese el nombre del producto: ");
-      nombre = formatearTexto(entrada, entrada.nextLine());
+      nombre = Utilities.formatearTexto(entrada, entrada.nextLine());
       System.out.println("Ingrese el precio del producto: ");
-      precio = mayorACero(entrada, entrada.nextDouble());
+      precio = Utilities.mayorACero(entrada, entrada.nextDouble());
       System.out.println("Ingrese la cantidad de stock del producto: ");
-      cantStock = mayorACero(entrada, entrada.nextInt());
+      cantStock = Utilities.mayorACero(entrada, entrada.nextInt());
       Producto nuevoProducto = new Producto(nombre, precio, cantStock);
       productos.add(nuevoProducto);
       entrada.nextLine(); //Limpia el enter que quedo en el buffer
 
-      continuar = deseaContinuar(entrada, "Desea agregar más productos?");
+      continuar = Utilities.deseaContinuar(entrada, "Desea agregar más productos?");
     }
   }
 
@@ -154,7 +154,8 @@ public class Main {
           System.out.print("Opción incorrecta. Intente nuevamente.");
           break;
       }
-      continuar = deseaContinuar(entrada, "Desea continuar con la busqueda de productos?");
+      continuar = Utilities.deseaContinuar(entrada,
+          "Desea continuar con la busqueda de productos?");
     }
   }
 
@@ -178,7 +179,8 @@ public class Main {
         default -> System.out.print("Opción incorrecta. Intente nuevamente.");
       }
       entrada.nextLine(); //Limpia el enter que quedo en el buffer
-      continuar = deseaContinuar(entrada, "Desea seguir actualizando los datos del producto?");
+      continuar = Utilities.deseaContinuar(entrada,
+          "Desea seguir actualizando los datos del producto?");
     }
   }
 
@@ -195,21 +197,21 @@ public class Main {
 
   public static void actualizarNombre(Scanner entrada, Producto p) {
     System.out.println("Ingrese el nuevo nombre del producto:");
-    String nuevoNombre = formatearTexto(entrada, entrada.nextLine());
+    String nuevoNombre = Utilities.formatearTexto(entrada, entrada.nextLine());
     p.setNombre(nuevoNombre);
     System.out.println("El nombre del nombre fue actualizado exitosamente.");
   }
 
   public static void actualizarPrecio(Scanner entrada, Producto p) {
     System.out.println("Ingrese el nuevo precio del producto:");
-    Double nuevoPrecio = mayorACero(entrada, entrada.nextDouble());
+    Double nuevoPrecio = Utilities.mayorACero(entrada, entrada.nextDouble());
     p.setPrecio(nuevoPrecio);
     System.out.println("El precio del producto fue actualizado exitosamente.");
   }
 
   public static void actualizarStock(Scanner entrada, Producto p) {
     System.out.println("Ingrese el nuevo nombre del producto:");
-    int nuevoStock = mayorACero(entrada, entrada.nextInt());
+    int nuevoStock = Utilities.mayorACero(entrada, entrada.nextInt());
     p.setCantStock(nuevoStock);
     System.out.println("El Stock del producto fue actualizado exitosamente.");
   }
@@ -230,7 +232,7 @@ public class Main {
       }
 
       System.out.print("El producto seleccionado es: " + productoSeleccionado.infoProducto());
-      boolean respuesta = deseaContinuar(entrada, "Desea continuar?");
+      boolean respuesta = Utilities.deseaContinuar(entrada, "Desea continuar?");
       if (respuesta) {
         Producto.eliminarProducto(productosBDD, productoSeleccionado);
         System.out.println("El producto fue eliminado exitosamente!.");
@@ -238,7 +240,7 @@ public class Main {
         System.out.println("La eliminación del producto fue cancelada.");
       }
 
-      continuar = deseaContinuar(entrada, "Desea eliminar otro producto?");
+      continuar = Utilities.deseaContinuar(entrada, "Desea eliminar otro producto?");
     }
   }
 
@@ -257,7 +259,7 @@ public class Main {
       productoSeleccionado = solicitarProductoPorID(entrada, productosBDD);
       cantidadProducto = solicitarCantidadProducto(entrada, productoSeleccionado);
 
-      respuesta = deseaContinuar(entrada,
+      respuesta = Utilities.deseaContinuar(entrada,
           confirmacion.formatted(cantidadProducto, productoSeleccionado.getNombre(),
               productoSeleccionado.getPrecio()));
       if (respuesta) {
@@ -267,10 +269,10 @@ public class Main {
       } else {
         System.out.println("No se agregó el producto al carrito.");
       }
-      continuar = deseaContinuar(entrada, "Desea agregar otro producto al mismo pedido?");
+      continuar = Utilities.deseaContinuar(entrada, "Desea agregar otro producto al mismo pedido?");
     }
     System.out.println("Para finalizar ingrese su nombre:");
-    nombreCliente = formatearTexto(entrada, entrada.nextLine());
+    nombreCliente = entrada.nextLine();
     pedidoActual.setNombreCliente(nombreCliente);
     pedidosBDD.add(pedidoActual);
     System.out.println(
@@ -333,65 +335,10 @@ public class Main {
   public static ArrayList<Producto> solicitarProductoPorNombre(Scanner entrada,
       ArrayList<Producto> productosBDD) {
     System.out.println("Ingrese el Nombre del producto: ");
-    String nombreProductoSeleccionado = formatearTexto(entrada, entrada.nextLine());
+    String nombreProductoSeleccionado = Utilities.formatearTexto(entrada, entrada.nextLine());
     ArrayList<Producto> productosEncontrados = Producto.buscarProductoPorNombre(productosBDD,
         nombreProductoSeleccionado);
 
     return productosEncontrados;
-  }
-
-  public static boolean deseaContinuar(Scanner entrada, String texto) {
-    String mensaje = texto.concat("s/n: ");
-    System.out.println(mensaje);
-    String respuesta = entrada.nextLine().toLowerCase();
-    while (!(respuesta.equals("s") || respuesta.equals("n"))) {
-      System.out.println("Respuesta invalida, intente nuevamente: ");
-      respuesta = entrada.nextLine().toLowerCase();
-    }
-    return respuesta.equals("s");
-  }
-
-  public static String formatearTexto(Scanner entrada, String texto) {
-    if (texto.isEmpty()) {
-      while (texto.trim().isEmpty()) {
-        System.out.println("El texto no puede estar vacío. Inténtalo nuevamente:");
-        texto = entrada.nextLine();
-      }
-    }
-    String textoFormateado = "";
-    texto = texto.toLowerCase().trim();
-
-    String[] palabras = texto.split(" ");
-    for (String palabra : palabras) {
-      textoFormateado = textoFormateado.concat(palabra.substring(0, 1).toUpperCase())
-          .concat(palabra.substring(1)).concat(" ");
-    }
-    return textoFormateado;
-  }
-
-  public static Double mayorACero(Scanner entrada, double num) {
-    while (num < 1) {
-      System.out.println("Valor invalido. Intente nuevamente: ");
-      num = entrada.nextDouble();
-    }
-    return num;
-  }
-
-  public static int mayorACero(Scanner entrada, int num) {
-    while (num < 1) {
-      System.out.println("Valor invalido. Intente nuevamente: ");
-      num = entrada.nextInt();
-    }
-    return num;
-  }
-
-  public static int numeroEntre(Scanner entrada, int min, int max) {
-    int num = entrada.nextInt();
-    while (num < min || num > max) {
-      System.out.print(
-          "Valor invalido. El número se encuentra fuera de rango.Intente nuevamente: ");
-      num = entrada.nextInt();
-    }
-    return num;
   }
 }
