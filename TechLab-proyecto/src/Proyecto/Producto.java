@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class Producto{
   private static int siguienteId = 1;
-
   private int id;
   private String nombre;
   private Double precio;

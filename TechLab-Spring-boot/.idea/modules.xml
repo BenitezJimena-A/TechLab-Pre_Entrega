@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TechLab-Proyecto-Final.iml" filepath="$PROJECT_DIR$/TechLab-Proyecto-Final.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TechLab-Proyecto-final.iml" filepath="$PROJECT_DIR$/.idea/TechLab-Proyecto-final.iml" />
     </modules>
   </component>
 </project>
