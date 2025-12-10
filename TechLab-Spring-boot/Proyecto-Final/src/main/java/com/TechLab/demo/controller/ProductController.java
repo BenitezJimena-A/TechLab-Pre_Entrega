@@ -1,8 +1,11 @@
-package com.TechLab.demo.Controller;
+package com.TechLab.demo.controller;
 
+import com.TechLab.demo.exception.ProyectException;
 import com.TechLab.demo.model.Product;
 import com.TechLab.demo.service.ProductService;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,8 +47,12 @@ public class ProductController {
   }
 
   @DeleteMapping("/productos/{id}")
-  public Product removeProduct(@PathVariable Integer id) {
-    return this.productservice.removeProduct(id);
+  public ResponseEntity<Product> removeProduct(@PathVariable Integer id){
+    try{
+      return ResponseEntity.status(HttpStatus.OK).body(this.productservice.removeProduct(id));
+    }catch (ProyectException e){
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
   }
 
 }

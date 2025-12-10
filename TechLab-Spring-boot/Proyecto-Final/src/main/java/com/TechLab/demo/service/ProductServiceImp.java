@@ -1,6 +1,9 @@
 package com.TechLab.demo.service;
 
 import com.TechLab.demo.Utils.Utils;
+import com.TechLab.demo.exception.NotFoundException;
+import com.TechLab.demo.exception.ProyectException;
+import com.TechLab.demo.exception.ValidationException;
 import com.TechLab.demo.model.Product;
 import com.TechLab.demo.repository.ProductRepository;
 import java.util.List;
@@ -54,13 +57,15 @@ public class ProductServiceImp implements ProductService {
     //find product
     System.out.println("-----Editing product-----");
     Product product = this.productRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("The product was not found."));
+        .orElseThrow(() -> new NotFoundException("The product was not found."));
 
     //validation name
     if (!utilities.isEmpty(newData.getName())) {
       log.info("The name was updated. Last: {}, New: {}.", productSelect.getName(),
           newData.getName());
       product.setName(newData.getName());
+    }else{
+      throw new ValidationException("The product cannot be edited because the name is invalid.");
     }
 
     //validation description
@@ -68,6 +73,8 @@ public class ProductServiceImp implements ProductService {
       log.info("The description was updated. Last: {}, New: {}.", productSelect.getDescription(),
           newData.getDescription());
       product.setDescription(newData.getDescription());
+    }else{
+      throw new ValidationException("The product cannot be edited because the description is invalid.");
     }
 
     //validation category
@@ -75,6 +82,8 @@ public class ProductServiceImp implements ProductService {
       log.info("The category was updated. Last: {}, New: {}.", productSelect.getCategory(),
           newData.getCategory());
       product.setCategory(newData.getCategory());
+    }else{
+      throw new ValidationException("The product cannot be edited because the category is invalid.");
     }
 
     //validation stock
@@ -82,6 +91,8 @@ public class ProductServiceImp implements ProductService {
       log.info("The stock was updated. Last: {}, New: {}.", productSelect.getStock(),
           newData.getStock());
       product.setStock(newData.getStock());
+    }else{
+      throw new ValidationException("The product cannot be edited because the stock is invalid.");
     }
 
     //validation price
@@ -89,14 +100,16 @@ public class ProductServiceImp implements ProductService {
       log.info("The price was updated. Last: {}, New: {}.", productSelect.getPrice(),
           newData.getPrice());
       product.setPrice(newData.getPrice());
+    }else{
+      throw new ValidationException("The product cannot be edited because the price is invalid.");
     }
 
     return this.productRepository.save(product);
   }
 
-  public Product removeProduct(Integer id) {
+  public Product removeProduct(Integer id){
     Product productSelect = this.productRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("The product was not found."));
+        .orElseThrow(() -> new NotFoundException("The product was not found."));
 
     System.out.println("-----Removing product-----");
     productRepository.delete(productSelect);
